@@ -3,6 +3,10 @@ const {CloudBillingClient} = require('@google-cloud/billing');
 const billingClient = new CloudBillingClient();
 const TelegramBot = require('node-telegram-bot-api');
 
+const nodemailer = require('nodemailer');
+
+const { WebClient } = require('@slack/web-api');
+
 console.log(`Starting closeBillingOnExceededQuota`);
 
 exports.closeBillingOnExceededQuota = async ev => {
@@ -84,6 +88,21 @@ async function sendNotifications(endpoints, message) {
                 endpoint.chatId,
                 message
             );
+        } else if (endpoint.type === 'slack') {
+            console.log(`Sending notification via ${endpoint.type} [channelId=${endpoint.channelId}]: ${message}`);
+            await new WebClient(endpoint.botToken).chat.postMessage(
+                { channel: endpoint.channelId, text: message }
+            );
+        } else if (endpoint.type === 'email') {
+            console.log(`Sending notification via ${endpoint.type} [recipient=${endpoint.recipient}]: ${message}`);
+            let transporter = nodemailer.createTransport(endpoint.smtpConfig);
+            await transporter.sendMail({
+                from: `Cloud Alert ${endpoint.from}`, 
+                to: endpoint.recipient, 
+                subject: endpoint.subject, 
+                text: message
+              });
+
         }
     }));
 }
