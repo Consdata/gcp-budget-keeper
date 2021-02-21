@@ -6,6 +6,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const nodemailer = require('nodemailer');
 
 const { WebClient } = require('@slack/web-api');
+const {SecretManagerServiceClient} = require('@google-cloud/secret-manager');
 
 console.log(`Starting closeBillingOnExceededQuota`);
 
@@ -33,9 +34,11 @@ async function onNotifyThresholdExceeded(config, {
     currencyCode
 }) {
     console.log(`Notify threshold exceeded [budgetDisplayName=${budgetDisplayName}, alertThresholdExceeded=${alertThresholdExceeded}, costAmount=${costAmount}, budgetAmount=${budgetAmount}${currencyCode}]`);
-    if (config.notifications && config.notifications.endpoints) {
+    if (config.notifications && config.notifications.configSecretManagerPath) {
+        let  [notificationsConfig] = await new SecretManagerServiceClient().accessSecretVersion({name: config.notifications.configSecretManagerPath})
+        let notifications = JSON.parse(notificationsConfig.payload.data.toString())
         await sendNotifications(
-            config.notifications.endpoints,
+            notifications.endpoints,
             `Budget ${budgetDisplayName} exceeded warning threshold (${alertThresholdExceeded * 100}% - ${costAmount}/${budgetAmount}${currencyCode})`
         );
     }
@@ -65,7 +68,7 @@ async function onCutOffThresholdExceeded(config, billingAccountId, {
                 });
             })
     );
-    if (config.notifications && config.notifications.endpoints) {
+     if (config.notifications && config.notifications.configSecretManagerPath) {
         const disableForProjects = projects
             .filter(project => config.cutOff.all || config.cutOff.projects.indexOf(project.projectId) > -1)
             .map(project => project.projectId)
@@ -73,8 +76,10 @@ async function onCutOffThresholdExceeded(config, billingAccountId, {
         const message =
             `Budget ${budgetDisplayName} exceeded emergency cut off threshold (${alertThresholdExceeded * 100}% - ${costAmount}/${budgetAmount}${currencyCode})\n`
             + `Disabling billing for projects: ${disableForProjects}!`
+        let  [notificationsConfig] = await new SecretManagerServiceClient().accessSecretVersion({name: config.notifications.configSecretManagerPath})
+        let notifications = JSON.parse(notificationsConfig.payload.data.toString())
         await sendNotifications(
-            config.notifications.endpoints,
+            notifications.endpoints,
             message
         );
     }
