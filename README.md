@@ -14,7 +14,7 @@ use service account key file for authentication
 create terraform bucket for state storage
   - gsutil mb -p {project-id} gs://${project-id}-budget-keeper-infrastructure
 
-init terraform with `terafform init` and provide created bucket name for `Google Cloud Storage bucket`
+init terraform with `terraform init` and provide created bucket name for `Google Cloud Storage bucket`
   - GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json terraform init \
       -backend-config="bucket=cd-devops-budget-keeper-infrastructure"
 
