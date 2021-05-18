@@ -20,7 +20,7 @@ resource "google_secret_manager_secret_version" "notifications-config-version" {
   secret_data = <<EOT
      {"endpoints":[
         {"type": "telegram", "chatId": "1"},
-        {"type": "slack", "channelId": "2"},
+        {"type": "slack", "channelId": "2", "botToken": "oxb-test"},
         {"type": "email", "from": "from@example.com", "recipient": "recipient@example.com", "subject": "Alert",
             "smtpConfig": {"host": "smtp.example.com","port": 587,"secure": false,
                   "auth": {"user": "example", "pass": "example"},
