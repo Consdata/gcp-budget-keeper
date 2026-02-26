@@ -1,5 +1,5 @@
 resource "google_project_service" "gcp_services" {
-  provider = google-beta
+  provider = google
   count   = length(var.gcp_service_list)
   project = var.gcp-project
   service = var.gcp_service_list[count.index]

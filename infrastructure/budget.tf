@@ -1,12 +1,12 @@
 data "google_billing_account" "account" {
-  provider = google-beta
+  provider = google
   depends_on = [google_project_service.gcp_services]
 
   billing_account = var.billing-account
 }
 
 resource "google_billing_budget" "budget" {
-  provider = google-beta
+  provider = google
   depends_on = [google_project_service.gcp_services]
 
   billing_account = data.google_billing_account.account.id

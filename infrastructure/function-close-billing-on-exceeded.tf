@@ -8,7 +8,7 @@ data "archive_file" "close-billing-on-exceeded-quota" {
 }
 
 resource "google_storage_bucket_object" "close-billing-on-exceeded-quota" {
-  provider = google-beta
+  provider = google
   depends_on = [google_project_service.gcp_services]
 
   name = format("%s.%s.zip", "close-billing-on-exceeded-quota", data.archive_file.close-billing-on-exceeded-quota.output_md5)
@@ -17,7 +17,7 @@ resource "google_storage_bucket_object" "close-billing-on-exceeded-quota" {
 }
 
 resource "google_cloudfunctions_function" "close-billing-on-exceeded-quota" {
-  provider = google-beta
+  provider = google
   depends_on = [google_project_service.gcp_services]
 
   name = "close-billing-on-exceeded-quota"
