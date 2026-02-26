@@ -9,6 +9,6 @@ gcloud projects create PROJECT_ID
 ```
 Generate key for service account and save it to file
 ```
-gcloud iam service-accounts keys create key.json --iam-account terraform-manager@PROJECT_ID.iam.gserviceaccount.com --project PROJECT_ID
+gcloud iam service-accounts keys create secrets/key.json --iam-account terraform-manager@PROJECT_ID.iam.gserviceaccount.com --project PROJECT_ID
 ```
 
