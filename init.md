@@ -44,11 +44,14 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/storage.admin"
 
-
 gcloud beta billing accounts add-iam-policy-binding ${BILLING_ACCOUNT_ID} \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
-  --role="roles/billing.user"
+  --role="roles/billing.admin"
   
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
+  --role="roles/cloudfunctions.developer"
+
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/iam.serviceAccountAdmin"
@@ -60,6 +63,11 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/pubsub.admin"
+  
+gcloud iam service-accounts add-iam-policy-binding budget-keeper-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
+  --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountUser" \
+  --project=${PROJECT_ID}
 ```
 
 8. Init terraform with `terraform init` and provide created bucket name for `Google Cloud Storage bucket`

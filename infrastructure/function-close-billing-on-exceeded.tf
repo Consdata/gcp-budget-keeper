@@ -23,7 +23,7 @@ resource "google_cloudfunctions_function" "close-billing-on-exceeded-quota" {
   name = "close-billing-on-exceeded-quota"
   project = var.gcp-project
   region = var.gcp-region
-  runtime = "nodejs12"
+  runtime = "nodejs22"
   available_memory_mb = 256
   entry_point = "closeBillingOnExceededQuota"
   source_archive_bucket = google_storage_bucket.functions-source-archive.name
