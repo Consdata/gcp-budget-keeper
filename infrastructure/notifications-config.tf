@@ -8,7 +8,7 @@ resource "google_secret_manager_secret" "notifications-config" {
   provider = google-beta
   secret_id = "notifications-config"
   replication {
-    automatic = true
+    auto {}
   }
 
   depends_on = [google_project_service.secretmanager]
