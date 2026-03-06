@@ -1,11 +1,9 @@
 resource "google_project_service" "secretmanager" {
-  provider = google
   project = var.gcp-project
   service  = "secretmanager.googleapis.com"
 }
 
 resource "google_secret_manager_secret" "notifications-config" {
-  provider = google-beta
   secret_id = "notifications-config"
   replication {
     auto {}
@@ -15,7 +13,6 @@ resource "google_secret_manager_secret" "notifications-config" {
 }
 
 resource "google_secret_manager_secret_version" "notifications-config-version" {
-  provider = google-beta
   secret      = google_secret_manager_secret.notifications-config.id
   secret_data = <<EOT
      {"endpoints":[
@@ -31,7 +28,6 @@ resource "google_secret_manager_secret_version" "notifications-config-version" {
 }
 
 resource "google_secret_manager_secret_iam_member" "serviceAccount-close-billing-on-exceeded-quota" {
-  provider = google-beta
   secret_id = google_secret_manager_secret.notifications-config.id
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${var.gcp-project}@appspot.gserviceaccount.com"

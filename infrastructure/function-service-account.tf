@@ -1,5 +1,4 @@
 resource "google_service_account" "function-service-account" {
-  provider = google-beta
   depends_on = [google_project_service.gcp_services]
 
   account_id   = "budget-keeper-service-account"
@@ -8,7 +7,6 @@ resource "google_service_account" "function-service-account" {
 }
 
 resource "google_billing_account_iam_member" "function-service-account-admin" {
-  provider = google-beta
   depends_on = [google_project_service.gcp_services]
 
   billing_account_id = var.billing-account

@@ -89,7 +89,7 @@ GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform init \
 GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform apply --var-file=terraform.tfvars --var-file=env.tfvars
 ```
 
-W przypadku błędu braku uprawnień do service accounta, który uruchamia funkcję, należy dodać uprawnienia do tego service accounta dla terraform-managera. Można to zrobić za pomocą poniższego polecenia (podmieniając MEMBER na odpowiednią wartość):
+W przypadku błędu braku uprawnień do service account'a, który uruchamia funkcję, należy dodać uprawnienia do tego service accounta dla terraform-managera. Można to zrobić za pomocą poniższego polecenia (podmieniając MEMBER na odpowiednią wartość):
 ```sh
 gcloud iam service-accounts add-iam-policy-binding budget-keeper-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
