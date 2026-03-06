@@ -64,11 +64,6 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/pubsub.admin"
   
-gcloud iam service-accounts add-iam-policy-binding budget-keeper-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
-  --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
-  --role="roles/iam.serviceAccountUser" \
-  --project=${PROJECT_ID}
-  
 gcloud iam service-accounts add-iam-policy-binding \
   $(gcloud iam service-accounts list \
     --filter="displayName:Default compute service account" \
@@ -91,11 +86,7 @@ GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform init \
 
 10. Run apply command with params 
 ```sh
-GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform apply --var-file ./env.tfvars
-
-gcloud iam service-accounts add-iam-policy-binding 814849866845-compute@developer.gserviceaccount.com \
-  --member MEMBER \
-  --role roles/iam.serviceAccountUser
+GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform apply --var-file=terraform.tfvars --var-file=env.tfvars
 ```
 
 W przypadku błędu braku uprawnień do service accounta, który uruchamia funkcję, należy dodać uprawnienia do tego service accounta dla terraform-managera. Można to zrobić za pomocą poniższego polecenia (podmieniając MEMBER na odpowiednią wartość):
