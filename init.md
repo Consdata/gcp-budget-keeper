@@ -68,6 +68,16 @@ gcloud iam service-accounts add-iam-policy-binding budget-keeper-service-account
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/iam.serviceAccountUser" \
   --project=${PROJECT_ID}
+  
+gcloud iam service-accounts add-iam-policy-binding \
+  $(gcloud iam service-accounts list \
+    --filter="displayName:Default compute service account" \
+    --format="value(email)" \
+    --project=${PROJECT_ID} \
+  ) \
+  --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountUser" \
+  --project=${PROJECT_ID}
 ```
 
 8. Init terraform with `terraform init` and provide created bucket name for `Google Cloud Storage bucket`
@@ -82,6 +92,18 @@ GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform init \
 10. Run apply command with params 
 ```sh
 GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform apply --var-file ./env.tfvars
+
+gcloud iam service-accounts add-iam-policy-binding 814849866845-compute@developer.gserviceaccount.com \
+  --member MEMBER \
+  --role roles/iam.serviceAccountUser
+```
+
+W przypadku błędu braku uprawnień do service accounta, który uruchamia funkcję, należy dodać uprawnienia do tego service accounta dla terraform-managera. Można to zrobić za pomocą poniższego polecenia (podmieniając MEMBER na odpowiednią wartość):
+```sh
+gcloud iam service-accounts add-iam-policy-binding budget-keeper-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
+  --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountUser" \
+  --project=${PROJECT_ID}
 ```
 
 
