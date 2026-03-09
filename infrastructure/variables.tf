@@ -6,7 +6,6 @@ variable "pubsub-budget-topic" {}
 variable "billing-account" {}
 variable "budget-amount" {}
 variable "budget-currency" {}
-variable "budget-threshold-cutoff" {}
 variable "dir-build" {}
 variable "bucket-function-source-archives" {}
 variable "gcp_service_list" {
