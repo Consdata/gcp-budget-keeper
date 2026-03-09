@@ -11,14 +11,19 @@ const {SecretManagerServiceClient} = require('@google-cloud/secret-manager');
 console.log(`Starting closeBillingOnExceededQuota`);
 
 exports.closeBillingOnExceededQuota = async ev => {
+    console.log('Received Pub/Sub notification');
+    console.log(ev);
+    console.log('Event data:')
+    const eventData = JSON.parse(Buffer.from(ev.data, 'base64').toString());
+    console.log(eventData)
     const {billingAccountId} = ev.attributes;
     const billingConfig = JSON.parse(process.env.CONFIG_JSON)[billingAccountId];
     if (billingConfig) {
-        const eventData = JSON.parse(Buffer.from(ev.data, 'base64').toString());
         console.log(`Pub/Sub notification data: ${JSON.stringify(eventData)}`);
-        if (billingConfig.cutOff && (eventData.alertThresholdExceeded || 0) >= (billingConfig.cutOff.threshold || 0.8)) {
+        const budgetUtilizationRatio = eventData.costAmount / eventData.budgetAmount;
+        if (billingConfig.cutOff && budgetUtilizationRatio >= (billingConfig.cutOff.threshold || 0.8)) {
             await onCutOffThresholdExceeded(billingConfig, billingAccountId, eventData);
-        } else if (billingConfig.notifications && (eventData.alertThresholdExceeded || 0) >= (billingConfig.notifications.threshold || 0.5)) {
+        } else if (billingConfig.notifications && budgetUtilizationRatio >= (billingConfig.notifications.threshold || 0.5)) {
             await onNotifyThresholdExceeded(billingConfig, eventData);
         }
     } else {

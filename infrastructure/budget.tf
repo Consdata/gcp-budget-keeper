@@ -21,13 +21,6 @@ resource "google_billing_budget" "budget" {
     }
   }
 
-  threshold_rules {
-    threshold_percent = var.budget-threshold-warning
-  }
-  threshold_rules {
-    threshold_percent = var.budget-threshold-cutoff
-  }
-
   all_updates_rule {
     pubsub_topic = google_pubsub_topic.budget-pubsub.id
   }
