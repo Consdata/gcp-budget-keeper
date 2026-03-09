@@ -86,7 +86,7 @@ GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform init \
 
 10. Run apply command with params 
 ```sh
-GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform apply --var-file=terraform.tfvars --var-file=env.tfvars
+GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform apply --var-file=env.tfvars
 ```
 
 W przypadku błędu braku uprawnień do service account'a, który uruchamia funkcję, należy dodać uprawnienia do tego service accounta dla terraform-managera. Można to zrobić za pomocą poniższego polecenia (podmieniając MEMBER na odpowiednią wartość):
