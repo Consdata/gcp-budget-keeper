@@ -9,8 +9,8 @@ bucket-function-source-archives = "functions-source-archive"
 gcp_service_list = [
   "cloudbilling.googleapis.com",
   "pubsub.googleapis.com",
-  "cloudfunctions.googleapis.com",
-  "cloudbuild.googleapis.com",
   "iam.googleapis.com",
-  "billingbudgets.googleapis.com"
+  "billingbudgets.googleapis.com",
+  "eventarc.googleapis.com",
+  "run.googleapis.com"
 ]
