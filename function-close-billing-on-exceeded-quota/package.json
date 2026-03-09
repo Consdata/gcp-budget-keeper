@@ -6,7 +6,7 @@
   "author": "Grzegorz Lipecki <grzegorz.lipecki@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@google-cloud/billing": "^6.1.1",
+    "@google-cloud/billing": "^5.1.1",
     "@google-cloud/secret-manager": "^6.1.1",
     "@slack/web-api": "^7.14.1",
     "node-telegram-bot-api": "0.50.0",
