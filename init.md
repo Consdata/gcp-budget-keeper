@@ -78,24 +78,43 @@ gcloud iam service-accounts add-iam-policy-binding \
 8. Init terraform with `terraform init` and provide created bucket name for `Google Cloud Storage bucket`
 ```sh
 cd infrastructure
-GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform init \
--backend-config="bucket=${PROJECT_ID}-budget-keeper-infrastructure"
+export GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json 
+terraform init -backend-config="bucket=${PROJECT_ID}-budget-keeper-infrastructure"
 ```
 
 9. Create env tfvars based on env.tfvars.template
 
-10. Run apply command with params 
+10. Run apply commands to create service account and secret
+
 ```sh
-GOOGLE_APPLICATION_CREDENTIALS=../secrets/key.json terraform apply --var-file=env.tfvars
+terraform apply \
+  -target=google_service_account.function-service-account \
+  -target=google_secret_manager_secret.notifications-config \
+  --var-file=env.tfvars
 ```
 
-W przypadku błędu braku uprawnień do service account'a, który uruchamia funkcję, należy dodać uprawnienia do tego service accounta dla terraform-managera. Można to zrobić za pomocą poniższego polecenia (podmieniając MEMBER na odpowiednią wartość):
+11. Add permissions to service account
 ```sh
 gcloud iam service-accounts add-iam-policy-binding budget-keeper-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/iam.serviceAccountUser" \
   --project=${PROJECT_ID}
 ```
+
+12. Fill secret with notifications config.
+Create `notifications-config.json` file based on `notifications-config.example.json` in `config` directory. Then, run command:
+```sh
+gcloud secrets versions add notifications-config \
+  --data-file=../config/notifications-config.json \
+  --project=${PROJECT_ID}
+```
+Remember to not store plain secret file on disk.
+
+13. Apply rest of infrastructure with command:
+```sh
+terraform apply --var-file=env.tfvars
+```
+
 
 
 > ⚠️ **Warning:** When google apis first enabled it may take up to 10 min to propagate permissions.
