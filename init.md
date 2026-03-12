@@ -30,7 +30,7 @@ gcloud iam service-accounts keys create secrets/key.json --iam-account terraform
 gsutil mb -p ${PROJECT_ID} gs://${PROJECT_ID}-budget-keeper-infrastructure
 ```
 
-7. Add permissions to service account for project and billing account:
+7. Add permissions to service account for project and billing account: (TODO: narrow permissions)
 ```sh
 gcloud storage buckets add-iam-policy-binding gs://${PROJECT_ID}-budget-keeper-infrastructure \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
@@ -93,7 +93,7 @@ terraform apply \
   --var-file=env.tfvars
 ```
 
-11. Add permissions to service account
+11. Add permissions to service account (TODO: narrow permissions)
 ```sh
 gcloud iam service-accounts add-iam-policy-binding budget-keeper-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
@@ -114,7 +114,5 @@ Remember to not store plain secret file on disk.
 ```sh
 terraform apply --var-file=env.tfvars
 ```
-
-
 
 > ⚠️ **Warning:** When google apis first enabled it may take up to 10 min to propagate permissions.
