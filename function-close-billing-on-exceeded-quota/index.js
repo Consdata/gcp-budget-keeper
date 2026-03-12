@@ -13,9 +13,7 @@ console.log(`Starting closeBillingOnExceededQuota`);
 exports.closeBillingOnExceededQuota = async ev => {
     console.log('Received Pub/Sub notification');
     console.log(ev);
-    console.log('Event data:')
-    const eventData = JSON.parse(Buffer.from(ev.body.message.data, 'base64').toString());
-    console.log(eventData)
+    const eventData = JSON.parse(Buffer.from(ev.data, 'base64').toString());
     const {billingAccountId} = ev.attributes;
     const billingConfig = JSON.parse(process.env.CONFIG_JSON)[billingAccountId];
     if (billingConfig) {
