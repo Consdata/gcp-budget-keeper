@@ -13,3 +13,11 @@ resource "google_billing_account_iam_member" "function-service-account-admin" {
   role               = "roles/billing.admin"
   member             = "serviceAccount:${google_service_account.function-service-account.email}"
 }
+
+resource "google_secret_manager_secret_iam_member" "function-service-account-secret-accessor" {
+  depends_on = [google_project_service.gcp_services]
+
+  secret_id = google_secret_manager_secret.notifications-config.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.function-service-account.email}"
+}
