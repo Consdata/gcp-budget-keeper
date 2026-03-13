@@ -40,7 +40,7 @@ async function onNotifyThresholdExceeded(config, {
         let notifications = JSON.parse(notificationsConfig.payload.data.toString())
         await sendNotifications(
             notifications.endpoints,
-            `Budget ${budgetDisplayName} exceeded warning threshold (${costAmount / budgetAmount * 100}% - ${costAmount}/${budgetAmount}${currencyCode})`
+            `Budget ${budgetDisplayName} exceeded warning threshold (${((costAmount / budgetAmount) * 100).toFixed(2)}% - ${costAmount}/${budgetAmount}${currencyCode})`
         );
     }
 }
