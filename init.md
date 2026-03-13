@@ -116,3 +116,24 @@ terraform apply --var-file=env.tfvars
 ```
 
 > ⚠️ **Warning:** When google apis first enabled it may take up to 10 min to propagate permissions.
+
+14. Test function by publishing fake budget notification message to pub/sub topic:
+```sh
+gcloud pubsub topics publish budget-keeper-budgets \
+    --project=${PROJECT_ID} \
+    --attribute=billingAccountId=${BILLING_ACCOUNT_ID} \
+    --message='{
+        "budgetDisplayName": "Test budget",
+        "costAmount": 50.00,
+        "budgetAmount": 100.00,
+        "budgetAmountType": "SPECIFIED_AMOUNT",
+        "currencyCode": "PLN"
+    }'
+```
+
+In case of errors while testing, you are able to cancel function retring mechanizm by running command:
+```sh
+gcloud pubsub subscriptions seek budget-keeper-budgets \
+    --time=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
+    --project=${PROJECT_ID}
+```
