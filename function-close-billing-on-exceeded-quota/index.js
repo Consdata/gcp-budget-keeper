@@ -51,7 +51,7 @@ async function onCutOffThresholdExceeded(config, billingAccountId, {
     budgetAmount,
     currencyCode
 }) {
-    console.log(`Cut off threshold exceeded [budgetDisplayName=${budgetDisplayName}, alertThresholdExceeded=${alertThresholdExceeded}, costAmount=${costAmount}, budgetAmount=${budgetAmount}${currencyCode}]`);
+    console.log(`Cut off threshold exceeded [budgetDisplayName=${budgetDisplayName}, costAmount=${costAmount}, budgetAmount=${budgetAmount}${currencyCode}]`);
 
     const projects = await listProjectBillingInfo(`billingAccounts/${billingAccountId}`);
     const projectsString = projects.map(project => `(${project.projectId}:billing:${project.billingEnabled})    `).join(', ');

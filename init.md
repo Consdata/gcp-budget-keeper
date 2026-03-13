@@ -133,7 +133,13 @@ gcloud pubsub topics publish budget-keeper-budgets \
 
 In case of errors while testing, you are able to cancel function retring mechanizm by running command:
 ```sh
-gcloud pubsub subscriptions seek budget-keeper-budgets \
-    --time=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
-    --project=${PROJECT_ID}
+gcloud pubsub subscriptions seek \
+$(gcloud eventarc triggers describe \
+  $(terraform show -json | jq -r '
+    .values.root_module.resources[]
+    | select(.address=="google_cloudfunctions2_function.close-billing-on-exceeded-quota")
+    | .values.event_trigger[0].trigger') \
+  --project=${PROJECT_ID} \
+  --format="value(transport.pubsub.subscription)") \
+--time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 ```
