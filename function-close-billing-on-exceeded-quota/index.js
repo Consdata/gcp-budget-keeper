@@ -11,8 +11,7 @@ const {SecretManagerServiceClient} = require('@google-cloud/secret-manager');
 console.log(`Starting closeBillingOnExceededQuota`);
 
 exports.closeBillingOnExceededQuota = async ev => {
-    console.log('Received Pub/Sub notification');
-    console.log(ev);
+    console.log('Received Pub/Sub notification:', JSON.stringify(ev));
     const eventData = JSON.parse(Buffer.from(ev.data, 'base64').toString());
     const {billingAccountId} = ev.attributes;
     const billingConfig = JSON.parse(process.env.CONFIG_JSON)[billingAccountId];
@@ -31,18 +30,17 @@ exports.closeBillingOnExceededQuota = async ev => {
 
 async function onNotifyThresholdExceeded(config, {
     budgetDisplayName,
-    alertThresholdExceeded,
     costAmount,
     budgetAmount,
     currencyCode
 }) {
-    console.log(`Notify threshold exceeded [budgetDisplayName=${budgetDisplayName}, alertThresholdExceeded=${alertThresholdExceeded}, costAmount=${costAmount}, budgetAmount=${budgetAmount}${currencyCode}]`);
+    console.log(`Notify threshold exceeded [budgetDisplayName=${budgetDisplayName}, costAmount=${costAmount}, budgetAmount=${budgetAmount}${currencyCode}]`);
     if (config.notifications && config.notifications.configSecretManagerPath) {
         let  [notificationsConfig] = await new SecretManagerServiceClient().accessSecretVersion({name: config.notifications.configSecretManagerPath})
         let notifications = JSON.parse(notificationsConfig.payload.data.toString())
         await sendNotifications(
             notifications.endpoints,
-            `Budget ${budgetDisplayName} exceeded warning threshold (${alertThresholdExceeded * 100}% - ${costAmount}/${budgetAmount}${currencyCode})`
+            `Budget ${budgetDisplayName} exceeded warning threshold (${costAmount / budgetAmount * 100}% - ${costAmount}/${budgetAmount}${currencyCode})`
         );
     }
 }
