@@ -18,10 +18,6 @@ The **GCP Budget Keeper** works by integrating Cloud Budgets, Pub/Sub, and Cloud
 * `./function-close-billing-on-exceeded-quota`: Source code for the Cloud Function (the "Axe").
 * `init.md`: **Crucial setup and deployment instructions.**
 
-## Getting Started
-
-To ensure a safe and successful deployment, we have prepared a dedicated guide. We do not recommend running `terraform apply` without reading the prerequisites.
-
 ### ⚠️ Important
 Before you begin, please refer to the deployment documentation:
 
