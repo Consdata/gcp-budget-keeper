@@ -35,7 +35,7 @@ async function onNotifyThresholdExceeded(config, {
     currencyCode
 }) {
     console.log(`Notify threshold exceeded [budgetDisplayName=${budgetDisplayName}, costAmount=${costAmount}, budgetAmount=${budgetAmount}${currencyCode}]`);
-    if (config.notifications && config.notifications.configSecretManagerPath) {
+    if (config.notifications?.configSecretManagerPath) {
         let [notificationsConfig] = await new SecretManagerServiceClient().accessSecretVersion({name: config.notifications.configSecretManagerPath})
         let notifications = JSON.parse(notificationsConfig.payload.data.toString())
         await sendNotifications(
@@ -57,9 +57,9 @@ async function onCutOffThresholdExceeded(config, billingAccountId, {
     const projectsString = projects.map(project => `(${project.projectId}:billing:${project.billingEnabled})    `).join(', ');
     console.log(`found projects for billing account: ${projectsString}`);
 
-    if (config.notifications && config.notifications.configSecretManagerPath) {
+    if (config.notifications?.configSecretManagerPath) {
         const disableForProjects = projects
-            .filter(project => config.cutOff.all || config.cutOff.projects.indexOf(project.projectId) > -1)
+            .filter(project => config.cutOff.all || config.cutOff.projects.includes(project.projectId))
             .map(project => project.projectId)
             .join(',');
         const message =
@@ -76,7 +76,7 @@ async function onCutOffThresholdExceeded(config, billingAccountId, {
     await Promise.all(
         projects
             .filter(project => project.billingEnabled)
-            .filter(project => config.cutOff.all || config.cutOff.projects.indexOf(project.projectId) > -1)
+            .filter(project => config.cutOff.all || config.cutOff.projects.includes(project.projectId))
             .map(async project => {
                 console.log(`disabling billing for project: ${project.projectId}`);
                 return await billingClient.updateProjectBillingInfo({
@@ -101,11 +101,11 @@ async function sendNotifications(endpoints, message) {
                 {channel: endpoint.channelId, text: message}
             );
         } else if (endpoint.type === 'email') {
-            console.log(`Sending notification via ${endpoint.type} [recipient=${endpoint.recipient}]: ${message}`);
+            console.log(`Sending notification via ${endpoint.type} [recipients=${endpoint.recipients}]: ${message}`);
             let transporter = nodemailer.createTransport(endpoint.smtpConfig);
             await transporter.sendMail({
                 from: `Cloud Alert ${endpoint.from}`,
-                to: endpoint.recipient,
+                to: endpoint.recipients,
                 subject: endpoint.subject,
                 text: message
             });

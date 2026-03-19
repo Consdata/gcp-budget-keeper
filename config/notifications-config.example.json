@@ -12,7 +12,7 @@
     {
       "type": "email",
       "from": "from@example.com",
-      "recipient": "recipient@example.com",
+      "recipients": ["recipient1@example.com", "recipient2@example.com"],
       "subject": "Alert",
       "smtpConfig": {
         "host": "smtp.example.com",
