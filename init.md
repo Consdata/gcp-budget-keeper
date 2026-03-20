@@ -44,7 +44,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/storage.admin"
 
-gcloud beta billing accounts add-iam-policy-binding ${BILLING_ACCOUNT_ID} \
+gcloud billing accounts add-iam-policy-binding ${BILLING_ACCOUNT_ID} \
   --member="serviceAccount:terraform-manager@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/billing.admin"
   
