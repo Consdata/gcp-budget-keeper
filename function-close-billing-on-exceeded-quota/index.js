@@ -21,6 +21,7 @@ exports.closeBillingOnExceededQuota = async ev => {
         if (billingConfig.cutOff && budgetUtilizationRatio >= (billingConfig.cutOff.threshold || 0.8)) {
             await onCutOffThresholdExceeded(billingConfig, billingAccountId, eventData);
         } else if (billingConfig.notifications && budgetUtilizationRatio >= (billingConfig.notifications.threshold || 0.5)) {
+            // TODO: Implement idempotency to avoid duplicate notifications
             await onNotifyThresholdExceeded(billingConfig, eventData);
         }
     } else {
