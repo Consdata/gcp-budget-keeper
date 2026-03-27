@@ -5,3 +5,4 @@ build/
 *.iml
 infrastructure/env*.tfvars
 node_modules/
+secrets/

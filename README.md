@@ -1,26 +1,28 @@
-# gcp-budget-keeper
+# GCP Budget Keeper 🪓
 
-use or create project for billing tools, eg. `company-name-devops`
-  - make sure cloudresourcemanager.googleapis.com api is enabled
+A Terraform-based automated solution to prevent cloud overspending. This project implements a "kill switch" mechanism that monitors your Google Cloud Platform (GCP) budgets and automatically severs billing when defined thresholds are exceeded.
 
-use service account for authentication: https://cloud.google.com/sdk/docs/authorizing
-  - make sure service account has permissions 
-    - for tools project: owner (TODO: narrow permissions)
-    - for billing account: billing administrator (TODO: narrow permissions)
+## Overview
 
-use service account key file for authentication
-  - activate account (with gcloud auth activate-service-account, via https://cloud.google.com/sdk/docs/authorizing)
+The **GCP Budget Keeper** works by integrating Cloud Budgets, Pub/Sub, and Cloud Functions. When a budget alert is triggered, the system executes a pre-defined strategy to stop the "bleeding" of costs.
 
-create terraform bucket for state storage
-  - gsutil mb -p {project-id} gs://${project-id}-budget-keeper-infrastructure
+### Key Features
+* **Real-time Monitoring:** Reacts instantly to budget notifications.
+* **Automated Enforcement:** Disables billing to stop resource consumption.
+* **Terraform Managed:** Fully automated infrastructure as code (IaC) deployment.
+* **Granular Control:** Configure different thresholds for notifications and final "axe" execution.
 
-init terraform with `terraform init` and provide created bucket name for `Google Cloud Storage bucket`
-  - GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json terraform init \
-      -backend-config="bucket=cd-devops-budget-keeper-infrastructure"
+## Project Structure
 
-create env tfvars based on env.tfvars.template
+* `./infrastructure`: Contains all `.tf` files to deploy the infrastructure.
+* `./function-close-billing-on-exceeded-quota`: Source code for the Cloud Function (the "Axe").
+* `init.md`: **Crucial setup and deployment instructions.**
 
-run make with params 
-  - make credentials=service-account-json env=env-tfvars-file
+### ⚠️ Important
+Before you begin, please refer to the deployment documentation:
 
-warning: when google apis first enabled it may take up to 10 min to propagate permissions
+👉 **[Read the Initialization Guide (init.md)](./init.md)**
+
+## Prerequisites
+* Google Cloud Project with Billing Account access.
+* Terraform (v1.0.0+) installed locally.
